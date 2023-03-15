@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, ImageBackground, SafeAreaView } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { StartGame } from "./screens/StartGame/StartGame";
 import { LinearGradient } from "expo-linear-gradient";
@@ -53,21 +54,26 @@ export const App = () => {
     );
   }
 
-  return fontsLoaded ? (
-    <LinearGradient
-      colors={[Colors.primary700, Colors.accent500]}
-      style={styles.rootScreen}
-    >
-      <ImageBackground
-        source={require("./assets/images/background.png")}
-        style={styles.rootScreen}
-        imageStyle={styles.backgroundImage}
-      >
-        <SafeAreaView style={styles.rootScreen}>{screen}</SafeAreaView>
-      </ImageBackground>
-    </LinearGradient>
-  ) : (
-    <AppLoading />
+  return (
+    <>
+      <StatusBar style="light" />
+      {fontsLoaded ? (
+        <LinearGradient
+          colors={[Colors.primary700, Colors.accent500]}
+          style={styles.rootScreen}
+        >
+          <ImageBackground
+            source={require("./assets/images/background.png")}
+            style={styles.rootScreen}
+            imageStyle={styles.backgroundImage}
+          >
+            <SafeAreaView style={styles.rootScreen}>{screen}</SafeAreaView>
+          </ImageBackground>
+        </LinearGradient>
+      ) : (
+        <AppLoading />
+      )}
+    </>
   );
 };
 
