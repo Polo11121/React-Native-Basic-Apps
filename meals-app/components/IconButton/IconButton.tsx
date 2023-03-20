@@ -11,7 +11,6 @@ export const IconButton = ({ icon, color, onPress }: IconButtonProps) => (
   <Pressable
     style={({ pressed }) => pressed && styles.pressed}
     onPress={onPress}
-    android_ripple={{ color: "white" }}
   >
     <Ionicons name={icon} size={24} color={color} />
   </Pressable>
@@ -19,6 +18,6 @@ export const IconButton = ({ icon, color, onPress }: IconButtonProps) => (
 
 const styles = StyleSheet.create({
   pressed: {
-    opacity: 0.7,
+    opacity: 0.4,
   },
 });

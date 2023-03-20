@@ -7,6 +7,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MealDetailScreen } from "./screens/MealDetailScreen/MealDetailScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { FavoritesScreen } from "./screens/FavoritesScreen/FavoritesScreen";
+import { FavoritesContextProvider } from "./store/context/favorites-context";
+import { store } from "./store/redux/store";
+import { Provider } from "react-redux";
 
 export type RootStackParamList = {
   Drawer: undefined;
@@ -52,7 +55,8 @@ const DrawerNavigator = () => {
 };
 
 const App = () => (
-  <>
+  // <FavoritesContextProvider>
+  <Provider store={store}>
     <StatusBar style="light" />
     <NavigationContainer>
       <Stack.Navigator
@@ -73,7 +77,8 @@ const App = () => (
         <Stack.Screen name="MealDetail" component={MealDetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
-  </>
+  </Provider>
+  // </FavoritesContextProvider>
 );
 
 export default App;

@@ -7,6 +7,12 @@ import { List } from "../../components/List/List";
 import { MealDetails } from "../../components/MealDetails/MealDetails";
 import { Subtitle } from "../../components/Subtitle/Subtitle";
 import { MEALS } from "../../data/dummy-data";
+import { useFavoritesContext } from "../../store/context/favorites-context";
+import {
+  selectFavorites,
+  toggleFavorite,
+} from "../../store/redux/favortiesSlice";
+import { useAppDispatch, useAppSelector } from "../../store/redux/hooks";
 
 type MealDetailScreenScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -18,17 +24,23 @@ export const MealDetailScreen = ({
   navigation,
 }: MealDetailScreenScreenProps) => {
   const { mealId } = route.params;
+  const ids = useAppSelector(selectFavorites);
+  const dispatch = useAppDispatch();
 
   const mealInfo = MEALS.find(({ id }) => id === mealId);
 
-  const headerButtonHandler = () => {};
+  const headerButtonHandler = () => dispatch(toggleFavorite(mealId));
 
   useLayoutEffect(
     () =>
       navigation.setOptions({
         title: mealInfo?.title,
         headerRight: () => (
-          <IconButton icon="star" color="white" onPress={headerButtonHandler} />
+          <IconButton
+            icon="star"
+            color={ids.includes(mealId) ? "yellow" : "white"}
+            onPress={headerButtonHandler}
+          />
         ),
       }),
     [navigation, headerButtonHandler]
