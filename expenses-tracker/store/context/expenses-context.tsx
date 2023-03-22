@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useState, useContext } from "react";
-import uuid from "react-native-uuid";
 
 interface Expense {
   description: string;
@@ -10,6 +9,7 @@ interface Expense {
 const ExpensesContext = createContext({
   expenses: [] as Expense[],
   addExpense: ({ date, description, id, amount }: Expense) => {},
+  setExpenses: (expenses: Expense[]) => {},
   removeExpense: (id: string) => {},
   updateExpense: (id: string, expense: Expense) => {},
 });
@@ -19,26 +19,7 @@ export const ExpensesContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    {
-      id: uuid.v4().toString(),
-      description: "Test",
-      amount: 100,
-      date: new Date("2021-12-19"),
-    },
-    {
-      id: uuid.v4().toString(),
-      description: "Test",
-      amount: 100,
-      date: new Date("2021-12-19"),
-    },
-    {
-      id: uuid.v4().toString(),
-      description: "Test",
-      amount: 100,
-      date: new Date("2021-12-19"),
-    },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
 
   const addExpense = ({ date, description, id, amount }: Expense) =>
     setExpenses((currentExpenses) => [
@@ -60,7 +41,13 @@ export const ExpensesContextProvider = ({
 
   return (
     <ExpensesContext.Provider
-      value={{ expenses, updateExpense, removeExpense, addExpense }}
+      value={{
+        expenses,
+        updateExpense,
+        removeExpense,
+        addExpense,
+        setExpenses: (expenses) => setExpenses(expenses.reverse()),
+      }}
     >
       {children}
     </ExpensesContext.Provider>

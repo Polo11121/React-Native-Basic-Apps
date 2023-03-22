@@ -1,15 +1,20 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StyleSheet, View } from "react-native";
 import { Props, RootStackParamList } from "../../App";
 import { IconButton } from "../../components/IconButton/IconButton";
-import uuid from "react-native-uuid";
 import { GlobalStyles } from "../../constants/styles";
 import { useExpenseContext } from "../../store/context/expenses-context";
 import { ExpenseForm } from "../../components/ExpenseForm/ExpenseForm";
+import { deleteExpense, storeExpense, patchExpense } from "../../util/https";
+import { ExpenseData } from "../../util/types";
+import { LoaderOverlay } from "../../components/LoaderOverlay/LoaderOverlay";
+import { ErrorOverlay } from "../../components/ErrorOverlay/ErrorOverlay";
 
 export const ManageExpenses = () => {
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { params } = useRoute<Props["route"]>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -18,30 +23,45 @@ export const ManageExpenses = () => {
 
   const isEdit = !!params?.expenseId;
 
-  const removeExpenseHandler = () => {
-    removeExpense(params?.expenseId!);
-    navigation.goBack();
+  const removeExpenseHandler = async () => {
+    setIsLoading(true);
+
+    try {
+      await deleteExpense(params?.expenseId!);
+      removeExpense(params?.expenseId!);
+      navigation.goBack();
+    } catch (err: any) {
+      setError(err.message);
+      setIsLoading(false);
+    }
   };
 
   const cancelHandler = () => {
     navigation.goBack();
   };
 
-  const confirmHandler = (expenseData: {
-    amount: number;
-    date: Date;
-    description: string;
-  }) => {
-    if (isEdit) {
-      updateExpense(params?.expenseId, {
-        ...expenseData,
-        id: params?.expenseId!,
-      });
-    } else {
-      addExpense({ ...expenseData, id: uuid.v4().toString() });
-    }
+  const confirmHandler = async (expenseData: ExpenseData) => {
+    setIsLoading(true);
 
-    navigation.goBack();
+    try {
+      if (isEdit) {
+        await patchExpense(params?.expenseId!, expenseData);
+
+        updateExpense(params?.expenseId, {
+          ...expenseData,
+          id: params?.expenseId!,
+        });
+      } else {
+        const id = await storeExpense(expenseData);
+
+        addExpense({ ...expenseData, id });
+      }
+
+      navigation.goBack();
+    } catch (err: any) {
+      setError(err.message);
+      setIsLoading(false);
+    }
   };
 
   useLayoutEffect(() => {
@@ -50,6 +70,11 @@ export const ManageExpenses = () => {
 
   const selectedExpense = expenses.find(({ id }) => id === params?.expenseId);
 
+  if (error && !isLoading) {
+    return <ErrorOverlay message={error} onConfirm={() => setError(null)} />;
+  } else if (isLoading) {
+    return <LoaderOverlay />;
+  }
   return (
     <View style={styles.container}>
       <ExpenseForm
