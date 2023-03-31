@@ -1,3 +1,4 @@
+import { API_FIRE_URL } from "@env";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -9,9 +10,7 @@ function WelcomeScreen() {
 
   useEffect(() => {
     axios
-      .get(
-        `https://react-native-course-7f56c-default-rtdb.firebaseio.com/message.json?auth=${token}`
-      )
+      .get(`${API_FIRE_URL}=${token}`)
       .then((response) => setMessage(response.data));
   }, [token]);
 

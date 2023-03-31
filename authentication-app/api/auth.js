@@ -1,9 +1,8 @@
+import { API_KEY, API_URL } from "@env";
 import axios from "axios";
 
-const API_KEY = "AIzaSyB5DxUfWdiJLNKj9kdQVcJZr5DQNCGkKDM";
-
 export const authenticate = async (email, password, isLogin) => {
-  const url = `https://identitytoolkit.googleapis.com/v1/accounts:${
+  const url = `${API_URL}:${
     isLogin ? "signInWithPassword" : "signUp"
   }?key=${API_KEY}`;
 
