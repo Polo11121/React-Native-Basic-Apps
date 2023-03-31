@@ -1,17 +1,15 @@
-import { ExpenseData } from "./types";
 import axios from "axios";
-
-const backendUrl =
-  "https://react-native-course-7f56c-default-rtdb.firebaseio.com";
+import { ExpenseData } from "./types";
+import { API_URL } from "@env";
 
 export const storeExpense = async (expense: ExpenseData) => {
-  const response = await axios.post(`${backendUrl}/expenses.json`, expense);
+  const response = await axios.post(`${API_URL}/expenses.json`, expense);
 
   return response.data.name;
 };
 
 export const getExpenses = async () => {
-  const response = await axios.get(`${backendUrl}/expenses.json`);
+  const response = await axios.get(`${API_URL}/expenses.json`);
 
   const expenses = Object.keys(response.data).map((key) => ({
     ...response.data[key],
@@ -23,9 +21,9 @@ export const getExpenses = async () => {
 };
 
 export const deleteExpense = async (id: string) => {
-  await axios.delete(`${backendUrl}/expenses/${id}.json`);
+  await axios.delete(`${API_URL}/expenses/${id}.json`);
 };
 
 export const patchExpense = async (id: string, expense: ExpenseData) => {
-  await axios.put(`${backendUrl}/expenses/${id}.json`, expense);
+  await axios.put(`${API_URL}/expenses/${id}.json`, expense);
 };
