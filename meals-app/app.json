@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "meals-app",
+    "name": "My Recipe Book",
     "slug": "meals-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,18 +12,27 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
+      "versionCode": 1,
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.polo11121.mealsapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e35a726e-b19d-4bb2-be68-3a0a48defa36"
+      }
     }
   }
 }
